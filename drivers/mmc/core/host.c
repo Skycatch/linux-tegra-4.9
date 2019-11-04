@@ -330,6 +330,8 @@ int mmc_of_parse(struct mmc_host *host)
 			host->dsr);
 		host->dsr_req = 0;
 	}
+	if (device_property_read_bool(dev, "no-vdd-regulator"))
+		host->cti_regulator_disabled = true;
 
 	return mmc_pwrseq_alloc(host);
 }
