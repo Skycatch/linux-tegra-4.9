@@ -520,6 +520,7 @@ struct mmc_host {
 	bool			en_periodic_cflush;
 	unsigned int		flush_timeout;
 	struct timer_list	flush_timer;
+	bool			cti_regulator_disabled; /* regulator state */
 	unsigned long		private[0] ____cacheline_aligned;
 };
 
