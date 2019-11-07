@@ -200,14 +200,14 @@
 			};
 		};
 	};
-	
+
 	can_clock: can_clock{
         compatible = "fixed-clock";
         #clock-cells = <0>;
         clock-frequency = <20000000>;
         clock-accuracy = <100>;
     };
-
+	
 	spi@7000d400 { /* SPI 1 to 40 pin header */
 		status = "okay";
 		num-cs = <2>;
@@ -230,9 +230,9 @@
 			interrupts = <TEGRA_GPIO(H, 6) 0x01>; 
 			vdd-supply = <&battery_reg>;
 			xceiver-supply = <&battery_reg>;
-			spi-max-frequency=<2400000>;
+			spi-max-frequency=<24000000>;
 			controller-data {		
-                //nvidia,enable-hw-based-cs;
+                nvidia,enable-hw-based-cs;
 				nvidia,cs-setup-clk-count = <0x1e>;
 				nvidia,cs-hold-clk-count = <0x1e>;
 				nvidia,rx-clk-tap-delay = <0x1f>;
@@ -263,9 +263,9 @@
 			interrupts = <TEGRA_GPIO(I, 2) 0x01>; 
 			vdd-supply = <&battery_reg>;
 			xceiver-supply = <&battery_reg>;
-			spi-max-frequency=<2400000>;
-			controller-data {			
-                //nvidia,enable-hw-based-cs;			
+			spi-max-frequency=<24000000>;
+			controller-data {		
+                nvidia,enable-hw-based-cs;
 				nvidia,cs-setup-clk-count = <0x1e>;
 				nvidia,cs-hold-clk-count = <0x1e>;
 				nvidia,rx-clk-tap-delay = <0x1f>;

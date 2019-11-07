@@ -200,39 +200,33 @@
 			};
 		};
 	};
-	
-	can_clock: can_clock{
-        compatible = "fixed-clock";
-        #clock-cells = <0>;
-        clock-frequency = <20000000>;
-        clock-accuracy = <100>;
-    };
 
 	spi@7000d400 { /* SPI 1 to 40 pin header */
 		status = "okay";
 		num-cs = <2>;
 		cs-gpios = <&gpio TEGRA_GPIO(C, 3) GPIO_ACTIVE_LOW>, <&gpio TEGRA_GPIO(C, 4) GPIO_ACTIVE_LOW>;
-		can@0 {
-            status = "okay";
-            compatible = "microchip,mcp2515";
-            reg = <0>;	/* spi chip select 0 */
-            clocks = <&can_clock>;
-            interrupt-parent = <&gpio>;
-                /* the first cell defines the
-                    index of the interrupt within the controller, while the second cell is used
-                    to specify any of the following flags:
-                    - bits[3:0] trigger type and level flags
-                    1 = low-to-high edge triggered
-                    2 = high-to-low edge triggered
-                    4 = active high level-sensitive
-                    8 = active low level-sensitive
-                */
-			interrupts = <TEGRA_GPIO(H, 6) 0x01>; 
-			vdd-supply = <&battery_reg>;
-			xceiver-supply = <&battery_reg>;
-			spi-max-frequency=<2400000>;
-			controller-data {		
-                //nvidia,enable-hw-based-cs;
+		spi@0 {
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+			compatible = "spidev";
+			status = "okay";
+			reg = <0>;
+			spi-max-frequency = <65000000>;
+			controller-data {
+				nvidia,cs-setup-clk-count = <0x1e>;
+				nvidia,cs-hold-clk-count = <0x1e>;
+				nvidia,rx-clk-tap-delay = <0x1f>;
+				nvidia,tx-clk-tap-delay = <0x0>;
+			};
+		};
+		spi@1 {
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+			compatible = "spidev";
+			status = "okay";
+			reg = <1>;
+			spi-max-frequency = <65000000>;
+			controller-data {
 				nvidia,cs-setup-clk-count = <0x1e>;
 				nvidia,cs-hold-clk-count = <0x1e>;
 				nvidia,rx-clk-tap-delay = <0x1f>;
@@ -245,27 +239,28 @@
 		status = "okay";
 		num-cs = <2>;
 		cs-gpios = <&gpio TEGRA_GPIO(B, 7) GPIO_ACTIVE_LOW>, <&gpio TEGRA_GPIO(DD, 0) GPIO_ACTIVE_LOW>;
-		can@0 {
-            status = "okay";
-            compatible = "microchip,mcp2515";
-            reg = <0>;	/* spi chip select 0 */
-            clocks = <&can_clock>;
-            interrupt-parent = <&gpio>;
-                /* the first cell defines the
-                    index of the interrupt within the controller, while the second cell is used
-                    to specify any of the following flags:
-                    - bits[3:0] trigger type and level flags
-                    1 = low-to-high edge triggered
-                    2 = high-to-low edge triggered
-                    4 = active high level-sensitive
-                    8 = active low level-sensitive
-                */
-			interrupts = <TEGRA_GPIO(I, 2) 0x01>; 
-			vdd-supply = <&battery_reg>;
-			xceiver-supply = <&battery_reg>;
-			spi-max-frequency=<2400000>;
-			controller-data {			
-                //nvidia,enable-hw-based-cs;			
+		spi@0 {
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+			compatible = "spidev";
+			status = "okay";
+			reg = <0>;
+			spi-max-frequency = <65000000>;
+			controller-data {
+				nvidia,cs-setup-clk-count = <0x1e>;
+				nvidia,cs-hold-clk-count = <0x1e>;
+				nvidia,rx-clk-tap-delay = <0x1f>;
+				nvidia,tx-clk-tap-delay = <0x0>;
+			};
+		};
+		spi@1 {
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+			compatible = "spidev";
+			status = "okay";
+			reg = <1>;
+			spi-max-frequency = <65000000>;
+			controller-data {
 				nvidia,cs-setup-clk-count = <0x1e>;
 				nvidia,cs-hold-clk-count = <0x1e>;
 				nvidia,rx-clk-tap-delay = <0x1f>;

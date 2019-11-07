@@ -1,0 +1,143 @@
+/*
+ * arch/arm64/boot/dts/tegra210-p3448-0002-p3449-0000-b00.dts
+ *
+ * Copyright (c) 2018-2019, NVIDIA CORPORATION.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+#include "tegra210-nano-cti-base.dtsi"
+#include "porg-platforms/tegra210-porg-pinmux-p3448-0000-a02.dtsi"
+#include "porg-platforms/tegra210-porg-gpio-p3448-0000-a02.dtsi"
+
+/ {
+	model = "NVIDIA Jetson Nano Developer Kit";
+	compatible = "nvidia,jetson-nano", "nvidia,tegra210";
+	nvidia,dtsfilename = __FILE__;
+
+	sdhci@700b0600 { /* SDMMC4 for EMMC */
+		status = "okay";
+	};
+
+	sdhci@700b0000 { /* SDMMC1 for SD card */
+		status = "okay";
+	};
+
+	spi@70410000 { /* QSPI */
+		status = "disabled";
+	};
+	
+	can_clock: can_clock{
+        compatible = "fixed-clock";
+        #clock-cells = <0>;
+        clock-frequency = <20000000>;
+        clock-accuracy = <100>;
+    };
+
+	
+	spi@7000d400 {
+		status = "okay";
+		num-cs = <1>;
+		cs-gpios = <&gpio TEGRA_GPIO(C, 3) GPIO_ACTIVE_LOW>;
+		can@0 {
+            status = "okay";
+            compatible = "microchip,mcp2515";
+            reg = <0>;	/* spi chip select 0 */
+            clocks = <&can_clock>;
+            interrupt-parent = <&gpio>;
+                /* the first cell defines the
+                    index of the interrupt within the controller, while the second cell is used
+                    to specify any of the following flags:
+                    - bits[3:0] trigger type and level flags
+                    1 = low-to-high edge triggered
+                    2 = high-to-low edge triggered
+                    4 = active high level-sensitive
+                    8 = active low level-sensitive
+                */
+			interrupts = <TEGRA_GPIO(H, 6) 0x01>; 
+			vdd-supply = <&battery_reg>;
+			xceiver-supply = <&battery_reg>;
+			spi-max-frequency=<2400000>;
+			controller-data {		
+                nvidia,enable-hw-based-cs;
+				nvidia,cs-setup-clk-count = <0x1e>;
+				nvidia,cs-hold-clk-count = <0x1e>;
+				nvidia,rx-clk-tap-delay = <0x1f>;
+				nvidia,tx-clk-tap-delay = <0x0>;
+			};
+		};
+    };
+	
+	spi@7000d600 {
+		status = "okay";
+		num-cs = <1>;
+		cs-gpios = <&gpio TEGRA_GPIO(B, 7) GPIO_ACTIVE_LOW>;
+		can@0 {
+            status = "okay";
+            compatible = "microchip,mcp2515";
+            reg = <0>;	/* spi chip select 0 */
+            clocks = <&can_clock>;
+            interrupt-parent = <&gpio>;
+                /* the first cell defines the
+                    index of the interrupt within the controller, while the second cell is used
+                    to specify any of the following flags:
+                    - bits[3:0] trigger type and level flags
+                    1 = low-to-high edge triggered
+                    2 = high-to-low edge triggered
+                    4 = active high level-sensitive
+                    8 = active low level-sensitive
+                */
+			interrupts = <TEGRA_GPIO(I, 2) 0x01>; 
+			vdd-supply = <&battery_reg>;
+			xceiver-supply = <&battery_reg>;
+			spi-max-frequency=<2400000>;
+			controller-data {			
+                nvidia,enable-hw-based-cs;			
+				nvidia,cs-setup-clk-count = <0x1e>;
+				nvidia,cs-hold-clk-count = <0x1e>;
+				nvidia,rx-clk-tap-delay = <0x1f>;
+				nvidia,tx-clk-tap-delay = <0x0>;
+			};
+		};
+    };
+
+	gpio@6000d000 {
+			/* gpio-name for 40-pin header, gpio-name given as COL(10) x ROW(20) */
+			gpio-line-names = "",   "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "SPI1_MOSI",    "SPI1_MISO",    "SPI1_SCK",     "SPI1_CS0",     "SPI0_MOSI",    "SPI0_MISO",    "SPI0_SCK",     "SPI0_CS0",
+			"SPI0_CS1",     "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "",     "",     "",     "",     "",     "",     "GPIO13",      "",
+			"",     "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"UART1_RTS",    "UART1_CTS",    "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "",     "",     "",     "",     "I2S0_FS",    "I2S0_DIN",    "I2S0_DOUT",   "I2S0_SCLK",
+			"",     "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "",     "",     "",     "",     "",     "",     "",     "GPIO01",
+			"",     "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "",     "",     "",     "",     "",     "",     "GPIO07",   "",
+			"",     "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "",     "",     "GPIO12",       "",     "",     "",     "",     "",
+			"GPIO11",      "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "",     "",     "",     "",     "GPIO09",     "",     "",     "",
+			"",     "",     "",     "",     "",     "",     "",     "",     "",     "",
+			"",     "",     "SPI1_CS1",     "",     "",     "",     "",     "",     "",     "";
+	};
+};

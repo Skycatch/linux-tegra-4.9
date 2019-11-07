@@ -27,9 +27,9 @@
 #include "porg-platforms/tegra210-porg-power-tree-p3448-0000-a00.dtsi"
 #include "porg-platforms/tegra210-pinmux-drive-sdmmc-common.dtsi"
 #include "porg-platforms/tegra210-porg-pwm-fan.dtsi"
-#include "porg-platforms/tegra210-porg-camera.dtsi"
-#include "porg-platforms/tegra210-porg-camera-rbpcv2-imx219.dtsi"
-#include "porg-platforms/tegra210-porg-camera-rbpcv2-dual-imx219.dtsi"
+//#include "porg-platforms/tegra210-porg-camera.dtsi"
+//#include "porg-platforms/tegra210-porg-camera-rbpcv2-imx219.dtsi"
+//#include "porg-platforms/tegra210-porg-camera-rbpcv2-dual-imx219.dtsi"
 #include <t210-common-platforms/tegra210-ers-hdmi-e2190-1100-a00.dtsi>
 #include <t210-common-platforms/tegra210-dp.dtsi>
 #include "porg-platforms/tegra210-porg-thermal.dtsi"
@@ -39,8 +39,8 @@
 #include <tegra210-soc/tegra210-audio.dtsi>
 #include "porg-platforms/tegra210-porg-cpufreq.dtsi"
 #include "porg-platforms/tegra210-porg-powermon-p3448-0000-a00.dtsi"
-#include "porg-plugin-manager/tegra210-porg-eeprom-manager.dtsi"
-#include "porg-plugin-manager/tegra210-porg-plugin-manager.dtsi"
+//#include "porg-plugin-manager/tegra210-porg-eeprom-manager.dtsi"
+//#include "porg-plugin-manager/tegra210-porg-plugin-manager.dtsi"
 #include <tegra210-soc/mods-simple-bus.dtsi>
 #include "porg-platforms/tegra210-porg-extcon-p3448-0000-a00.dtsi"
 #include "porg-platforms/tegra210-porg-p3448-emc-a00.dtsi"
@@ -140,7 +140,7 @@
 			status = "okay";
 			nvidia,xbar-ctrl = <2 1 0 3 4>;
 			dp-display {
-				status = "okay";
+				status = "disabled";
 			};
 		};
 		sor1 {
@@ -152,6 +152,9 @@
 			nvidia,xbar-ctrl = <0 1 2 3 4>;
 			status = "okay";
 			hdmi-display {
+				status = "disabled";
+			};
+			dp-display {
 				status = "okay";
 			};
 		};
@@ -200,78 +203,13 @@
 			};
 		};
 	};
-	
-	can_clock: can_clock{
-        compatible = "fixed-clock";
-        #clock-cells = <0>;
-        clock-frequency = <20000000>;
-        clock-accuracy = <100>;
-    };
 
 	spi@7000d400 { /* SPI 1 to 40 pin header */
 		status = "okay";
-		num-cs = <2>;
-		cs-gpios = <&gpio TEGRA_GPIO(C, 3) GPIO_ACTIVE_LOW>, <&gpio TEGRA_GPIO(C, 4) GPIO_ACTIVE_LOW>;
-		can@0 {
-            status = "okay";
-            compatible = "microchip,mcp2515";
-            reg = <0>;	/* spi chip select 0 */
-            clocks = <&can_clock>;
-            interrupt-parent = <&gpio>;
-                /* the first cell defines the
-                    index of the interrupt within the controller, while the second cell is used
-                    to specify any of the following flags:
-                    - bits[3:0] trigger type and level flags
-                    1 = low-to-high edge triggered
-                    2 = high-to-low edge triggered
-                    4 = active high level-sensitive
-                    8 = active low level-sensitive
-                */
-			interrupts = <TEGRA_GPIO(H, 6) 0x01>; 
-			vdd-supply = <&battery_reg>;
-			xceiver-supply = <&battery_reg>;
-			spi-max-frequency=<2400000>;
-			controller-data {		
-                //nvidia,enable-hw-based-cs;
-				nvidia,cs-setup-clk-count = <0x1e>;
-				nvidia,cs-hold-clk-count = <0x1e>;
-				nvidia,rx-clk-tap-delay = <0x1f>;
-				nvidia,tx-clk-tap-delay = <0x0>;
-			};
-		};
 	};
 
 	spi@7000d600 { /* SPI 2 to 40 pin header */
 		status = "okay";
-		num-cs = <2>;
-		cs-gpios = <&gpio TEGRA_GPIO(B, 7) GPIO_ACTIVE_LOW>, <&gpio TEGRA_GPIO(DD, 0) GPIO_ACTIVE_LOW>;
-		can@0 {
-            status = "okay";
-            compatible = "microchip,mcp2515";
-            reg = <0>;	/* spi chip select 0 */
-            clocks = <&can_clock>;
-            interrupt-parent = <&gpio>;
-                /* the first cell defines the
-                    index of the interrupt within the controller, while the second cell is used
-                    to specify any of the following flags:
-                    - bits[3:0] trigger type and level flags
-                    1 = low-to-high edge triggered
-                    2 = high-to-low edge triggered
-                    4 = active high level-sensitive
-                    8 = active low level-sensitive
-                */
-			interrupts = <TEGRA_GPIO(I, 2) 0x01>; 
-			vdd-supply = <&battery_reg>;
-			xceiver-supply = <&battery_reg>;
-			spi-max-frequency=<2400000>;
-			controller-data {			
-                //nvidia,enable-hw-based-cs;			
-				nvidia,cs-setup-clk-count = <0x1e>;
-				nvidia,cs-hold-clk-count = <0x1e>;
-				nvidia,rx-clk-tap-delay = <0x1f>;
-				nvidia,tx-clk-tap-delay = <0x0>;
-			};
-		};
 	};
 
 	spi@7000d800 {
@@ -411,7 +349,7 @@
 	};
 
 	sound_card: sound {
-		status = "okay";
+		status = "disabled";
 		compatible = "nvidia,tegra-audio-t210ref-mobile-rt565x";
 		nvidia,model = "tegra-snd-t210ref-mobile-rt565x";
 
@@ -578,8 +516,8 @@
 		ports {
 			usb2-0 {
 				status = "okay";
-				mode = "otg";
-				nvidia,usb3-port-fake = <3>;
+				mode = "host";
+				//nvidia,usb3-port-fake = <3>;
 			};
 			usb2-1 {
 				status = "okay";
@@ -861,7 +799,7 @@
 			suspend-output-low;
 			gpios = <
 				TEGRA_GPIO(A, 6) 0
-			>;
+				>;
 		};
 	};
 
