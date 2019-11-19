@@ -19,8 +19,8 @@
  */
 
 #include "tegra210-nano-cti-base.dtsi"
-#include "porg-platforms/tegra210-porg-pinmux-p3448-0000-a02.dtsi"
-#include "porg-platforms/tegra210-porg-gpio-p3448-0000-a02.dtsi"
+#include "porg-platforms/tegra210-porg-pinmux-p3448-0000-a02-cti.dtsi"
+#include "porg-platforms/tegra210-porg-gpio-p3448-0000-a02-cti.dtsi"
 
 / {
 	model = "NVIDIA Jetson Nano Developer Kit";
@@ -31,8 +31,30 @@
 		status = "okay";
 	};
 
-	sdhci@700b0000 { /* SDMMC1 for SD card */
+	sdhci@700b0000 { 
+		status = "disabled";
+	};
+	
+	host1x {
+		sor1 {
+				hdmi-display {
+				status = "disabled";
+			};
+		};
+	};
+	
+	sdhci@700b0400 {
 		status = "okay";
+		cd-gpios = <&gpio TEGRA_GPIO(Z, 2) 0>;
+		/delete-property/ keep-power-in-suspend;
+		/delete-property/ non-removable;
+		mmc-ddr-1_8v;
+		mmc-ocr-mask = <3>;
+		uhs-mask = <0x0>;
+		max-clk-limit = <400000>;
+		tap-delay = <3>;			
+		vmmc-supply = <&max77620_ldo6>;
+		no-vdd-regulator;		
 	};
 
 	spi@70410000 { /* QSPI */
@@ -46,14 +68,13 @@
         clock-accuracy = <100>;
     };
 
-	
-	spi@7000d400 {
+	spi@7000d400 { /* SPI 1 to 40 pin header */
 		status = "okay";
 		num-cs = <1>;
-		cs-gpios = <&gpio TEGRA_GPIO(C, 3) GPIO_ACTIVE_LOW>;
+		cs-gpios = <&gpio 19 GPIO_ACTIVE_LOW>;
 		can@0 {
             status = "okay";
-            compatible = "microchip,mcp2515";
+            compatible = "microchip,mcp2517fd";
             reg = <0>;	/* spi chip select 0 */
             clocks = <&can_clock>;
             interrupt-parent = <&gpio>;
@@ -69,24 +90,23 @@
 			interrupts = <TEGRA_GPIO(H, 6) 0x01>; 
 			vdd-supply = <&battery_reg>;
 			xceiver-supply = <&battery_reg>;
-			spi-max-frequency=<2400000>;
-			controller-data {		
-                nvidia,enable-hw-based-cs;
+			spi-max-frequency=<5000000>;
+			controller-data {		                
 				nvidia,cs-setup-clk-count = <0x1e>;
 				nvidia,cs-hold-clk-count = <0x1e>;
 				nvidia,rx-clk-tap-delay = <0x1f>;
 				nvidia,tx-clk-tap-delay = <0x0>;
 			};
 		};
-    };
-	
-	spi@7000d600 {
+	};
+
+	spi@7000d600 { /* SPI 2 to 40 pin header */
 		status = "okay";
 		num-cs = <1>;
-		cs-gpios = <&gpio TEGRA_GPIO(B, 7) GPIO_ACTIVE_LOW>;
+		cs-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
 		can@0 {
             status = "okay";
-            compatible = "microchip,mcp2515";
+            compatible = "microchip,mcp2517fd";
             reg = <0>;	/* spi chip select 0 */
             clocks = <&can_clock>;
             interrupt-parent = <&gpio>;
@@ -102,16 +122,15 @@
 			interrupts = <TEGRA_GPIO(I, 2) 0x01>; 
 			vdd-supply = <&battery_reg>;
 			xceiver-supply = <&battery_reg>;
-			spi-max-frequency=<2400000>;
-			controller-data {			
-                nvidia,enable-hw-based-cs;			
+			spi-max-frequency=<5000000>;
+			controller-data {			               	
 				nvidia,cs-setup-clk-count = <0x1e>;
 				nvidia,cs-hold-clk-count = <0x1e>;
 				nvidia,rx-clk-tap-delay = <0x1f>;
 				nvidia,tx-clk-tap-delay = <0x0>;
 			};
 		};
-    };
+	};
 
 	gpio@6000d000 {
 			/* gpio-name for 40-pin header, gpio-name given as COL(10) x ROW(20) */
