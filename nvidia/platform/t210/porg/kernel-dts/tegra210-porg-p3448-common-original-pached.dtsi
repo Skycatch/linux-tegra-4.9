@@ -140,7 +140,7 @@
 			status = "okay";
 			nvidia,xbar-ctrl = <2 1 0 3 4>;
 			dp-display {
-				status = "okay";
+				status = "disabled";
 			};
 		};
 		sor1 {
