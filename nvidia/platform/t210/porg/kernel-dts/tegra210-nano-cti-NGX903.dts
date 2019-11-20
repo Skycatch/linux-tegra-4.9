@@ -74,7 +74,7 @@
 		cs-gpios = <&gpio 19 GPIO_ACTIVE_LOW>;
 		can@0 {
             status = "okay";
-            compatible = "microchip,mcp2517fd";
+            compatible = "microchip,mcp2515";
             reg = <0>;	/* spi chip select 0 */
             clocks = <&can_clock>;
             interrupt-parent = <&gpio>;
@@ -106,7 +106,7 @@
 		cs-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
 		can@0 {
             status = "okay";
-            compatible = "microchip,mcp2517fd";
+            compatible = "microchip,mcp2515";
             reg = <0>;	/* spi chip select 0 */
             clocks = <&can_clock>;
             interrupt-parent = <&gpio>;
