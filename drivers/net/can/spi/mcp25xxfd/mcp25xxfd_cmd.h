@@ -21,6 +21,22 @@
 
 #define MCP25XXFD_ADDRESS_MASK			0x0fff
 
+static inline void le32_to_cpu_array(u32 *buf, unsigned int words)
+{
+	while (words--) {
+		__le32_to_cpus(buf);
+		buf++;
+	}
+}
+
+static inline void cpu_to_le32_array(u32 *buf, unsigned int words)
+{
+	while (words--) {
+		__cpu_to_le32s(buf);
+		buf++;
+	}
+}
+
 static inline void mcp25xxfd_cmd_convert_to_cpu(u32 *data, int n)
 {
 	le32_to_cpu_array(data, n);
